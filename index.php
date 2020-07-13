@@ -62,8 +62,10 @@ if($metodo  == "calcularArea")
     {
         $somaAreas += $dadosCadastrados[$indice]['area'];
 
-         echo json_encode(array('mensagem' => 'Soma das areas dos poligonos '.$somaAreas));
+        
     }
+     
+      echo json_encode(array('mensagem' => 'Soma das areas dos poligonos '.$somaAreas));
 }
 
 
