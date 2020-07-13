@@ -1,51 +1,69 @@
 <?php 
 
-include '/controller/poligonoscontroller.php';
-include '/model/poligonos.php';
+// Inclusao das classes 
+include './controller/poligonoscontroller.php';
+include './model/poligonos.php';
 
-$metodo = $_GET['metodo'];
- 
-$data = file_get_contents('php://input');
-$obj =  json_decode($data);
+$metodo = '';
+
+// Identifica a requisicao feita na url
+if(isset($_REQUEST))
+{
+     // Recupera o valor informado na URl 
+     $partesURL = explode("/",$_REQUEST['url']);
+     $metodo    = $partesURL[1];
+}
 
 
+// Valida se o metodo foi informado na url
 if(empty($metodo)) 
 {
     echo "metodo invalido";
-
     exit;
 }    
 
-
-
-if($metodo  == "criar")
+ 
+// Cadastra um poligono no banco de dados
+if($metodo  == "criarPoligono")
 {
+    $data = file_get_contents('php://input');
+    $obj =  json_decode($data);
+
     if(!empty($data))
     {  
          
-         $obj = new Poligono();
+         $objetoPoligono = new Poligono();
          
-         $obj->setNomePoligono($data->nomePoligono);
-         $obj->setBase($data->base);
-         $obj->setAltura($data->altura);
+         $objetoPoligono->setNomePoligono($data->nomePoligono);
+         $objetoPoligono->setBase($data->base);
+         $objetoPoligono->setAltura($data->altura);
 
 
          $controllerPoligono = new PoligonoController();
-         $retorno            = $controllerPoligono->cadastrar($obj);
+         $retorno            = $controllerPoligono->cadastrar($objetoPoligono);
 
 
          if($retorno)
          {
-            echo json_encode(array('mensagem' => 'Poligono criado com sucesso'))
+            echo json_encode(array('mensagem' => 'Poligono criado com sucesso'));
          }   
 
     } 
 }    
 
+// Retorna a soma de todas as areas dos poligonos cadastrados
 if($metodo  == "calcularArea")
 {
     $controllerPoligono = new PoligonoController();
-    $controllerPoligono->somaAreas();
+    $dadosCadastrados   = $controllerPoligono->somaAreas();
+    $somaAreas          = 0;
+
+    foreach ($dadosCadastrados as $indice ) 
+    {
+        $somaAreas += $dadosCadastrados[$indice]['area'];
+
+         echo json_encode(array('mensagem' => 'Soma das areas dos poligonos '.$somaAreas));
+    }
 }
 
 

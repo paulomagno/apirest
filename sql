@@ -1,3 +1,7 @@
+CREATE DATABASE formas_geometricas;
+
+
+
 CREATE TABLE IF NOT EXISTS `poligonos` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `nome` varchar(120) NOT NULL,
